@@ -1,0 +1,20 @@
+name: CI
+on: [push]
+jobs:
+  build-logos:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: true
+      - name: Prepare Theos
+        uses: randomblock1/theos-action@main
+      - name: Build package
+        run: |
+          rm -f packages/*
+          make package FINALPACKAGE=1
+      - name: Upload package
+        uses: actions/upload-artifact@v3
+        with:
+          name: "Package built"
+          path: ${{ github.workspace }}/packages/*.deb

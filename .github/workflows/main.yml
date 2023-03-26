@@ -1,5 +1,9 @@
 name: CI
-on: [push]
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - master
 jobs:
   build-logos:
     runs-on: macos-latest
@@ -9,9 +13,13 @@ jobs:
           submodules: true
       - name: Prepare Theos
         uses: randomblock1/theos-action@main
-      - name: Build package
+      - name: Build package Appsync
         run: |
           rm -f packages/*
+          make package FINALPACKAGE=1
+      - name: Build package appinst
+        run: |
+          cd appinst
           make package FINALPACKAGE=1
       - name: Upload package
         uses: actions/upload-artifact@v3
